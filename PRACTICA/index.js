@@ -1,49 +1,44 @@
+// index.js
 const express = require('express');
-const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-
 const app = express();
 const PORT = 3000;
 
-// Middleware
-app.use(bodyParser.json());
+const tareasPath = path.join(__dirname, 'tareas.json');
+
+// Middleware para servir archivos estáticos (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 // Ruta para obtener todas las tareas
 app.get('/api/tareas', (req, res) => {
-    fs.readFile('tareas.json', (err, data) => {
-        if (err) throw err;
-        const tareas = JSON.parse(data);
-        res.json(tareas);
+    fs.readFile(tareasPath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).json({ error: 'No se pudo leer el archivo de tareas' });
+        } else {
+            res.json(JSON.parse(data));
+        }
     });
 });
 
 // Ruta para agregar una nueva tarea
 app.post('/api/tareas', (req, res) => {
     const nuevaTarea = req.body;
-    fs.readFile('tareas.json', (err, data) => {
-        if (err) throw err;
-        const tareas = JSON.parse(data);
-        tareas.push(nuevaTarea);
-        fs.writeFile('tareas.json', JSON.stringify(tareas), (err) => {
-            if (err) throw err;
-            res.json(nuevaTarea);
-        });
-    });
-});
-
-// Ruta para eliminar una tarea
-app.delete('/api/tareas/:id', (req, res) => {
-    const id = req.params.id;
-    fs.readFile('tareas.json', (err, data) => {
-        if (err) throw err;
-        let tareas = JSON.parse(data);
-        tareas = tareas.filter(tarea => tarea.id !== id);
-        fs.writeFile('tareas.json', JSON.stringify(tareas), (err) => {
-            if (err) throw err;
-            res.json({ message: 'Tarea eliminada' });
-        });
+    fs.readFile(tareasPath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).json({ error: 'No se pudo leer el archivo de tareas' });
+        } else {
+            const tareas = JSON.parse(data);
+            tareas.push(nuevaTarea);
+            fs.writeFile(tareasPath, JSON.stringify(tareas, null, 2), (err) => {
+                if (err) {
+                    res.status(500).json({ error: 'No se pudo escribir en el archivo de tareas' });
+                } else {
+                    res.status(201).json(nuevaTarea);
+                }
+            });
+        }
     });
 });
 
