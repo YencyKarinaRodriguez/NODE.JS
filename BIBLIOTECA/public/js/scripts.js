@@ -62,7 +62,7 @@ function loginUser(event) {
 
 //buscar libro
 function fetchBooks() {
-  fetch('/api/book')
+  fetch('/api/books')
   .then(response => response.json())
     .then(data => {
       const booksContainer = document.getElementById('book');
@@ -97,7 +97,7 @@ function fetchBooks() {
 
 //Prestamo de libro
 function borrowBook(bookId) {
-  fetch(`/api/book/${bookId}`, {
+  fetch(`/api/books/${bookId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ function borrowBook(bookId) {
 
 //Devolver libro
 function returnBook(bookId) {
-  fetch(`/api/book/${bookId}`, {
+  fetch(`/api/books/${bookId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

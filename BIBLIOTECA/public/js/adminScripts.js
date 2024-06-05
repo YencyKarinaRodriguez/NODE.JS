@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   function fetchBooks() {
-    fetch('/api/book')
+    fetch('/api/books')
       .then(response => response.json())
       .then(data => {
-        const booksContainer = document.getElementById('book');
+        const booksContainer = document.getElementById('books');
         booksContainer.innerHTML = '';
         data.forEach(book => {
           const bookDiv = document.createElement('div');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
   
-    fetch('/api/book', {
+    fetch('/api/books', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTitle = prompt('Nuevo Título', book.title);
     const newAuthor = prompt('Nuevo Autor', book.author);
   
-    fetch(`/api/book/${book._id}`, {
+    fetch(`/api/books/${book._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   function deleteBook(bookId) {
-    fetch(`/api/book/${bookId}`, {
+    fetch(`/api/books/${bookId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
